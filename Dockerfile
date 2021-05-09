@@ -9,6 +9,7 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y \
     bzip2 \
     ccache \
     cmake \
+    curl \
     flex \
     g++ \
     gettext \
@@ -23,6 +24,7 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y \
     libtool \
     libtool-bin \
     libxml-parser-perl \
+    lld \
     lzip \
     make \
     openssl \
@@ -46,9 +48,11 @@ RUN cd /opt/mxe && \
     make -j$(nproc) JOBS=$(nproc) \
     mingw-w64 \
     gcc \
+    libgnurx \
     zlib \
     MXE_TARGETS=i686-w64-mingw32.shared \
     MXE_PLUGIN_DIRS=plugins/gcc10 \
     MXE_USE_CCACHE=no \
     && make clean-junk \
     && rm -rf pkg
+RUN ln -s /usr/bin/ld.lld /opt/mxe/usr/bin/i686-w64-mingw32.shared-ld.lld
