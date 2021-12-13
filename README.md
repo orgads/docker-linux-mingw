@@ -1,5 +1,5 @@
 # docker-linux-mingw
-Ubuntu based image containing GCC10 MinGW built with MXE.
+Debian based image containing GCC11 MinGW built with MXE.
 
 To use the container defined by this repository:
 

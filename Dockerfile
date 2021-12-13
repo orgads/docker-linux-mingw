@@ -1,6 +1,6 @@
-FROM ubuntu:focal
+FROM debian:testing
 RUN printf 'APT::Get::Install-Recommends "false";\nAPT::Get::Install-Suggests "false";' > /etc/apt/apt.conf.d/10no-recommends
-RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     autoconf \
     automake \
     autopoint \
@@ -32,26 +32,26 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y \
     patch \
     perl \
     pkg-config \
-    python \
+    python-is-python3 \
     ruby \
     sed \
     unzip \
     vim \
     wget \
     xz-utils \
-    && apt clean
+    && apt-get clean
 
 ENV PATH=$PATH:/opt/mxe/usr/bin
 
 RUN git clone https://github.com/orgads/mxe /opt/mxe
 RUN cd /opt/mxe && \
     make -j$(nproc) JOBS=$(nproc) \
-    mingw-w64 \
     gcc \
     libgnurx \
+    mingw-w64 \
     zlib \
     MXE_TARGETS=i686-w64-mingw32.shared \
-    MXE_PLUGIN_DIRS=plugins/gcc10 \
+    MXE_PLUGIN_DIRS=plugins/gcc11 \
     MXE_USE_CCACHE=no \
     && make clean-junk \
     && rm -rf pkg
