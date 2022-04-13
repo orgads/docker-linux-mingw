@@ -46,13 +46,13 @@ ENV PATH=$PATH:/opt/mxe/usr/bin
 RUN git clone https://github.com/orgads/mxe /opt/mxe
 RUN cd /opt/mxe && \
     make -j$(nproc) JOBS=$(nproc) \
+    boost \
     gcc \
     libgnurx \
+    lld \
     mingw-w64 \
     zlib \
     MXE_TARGETS=i686-w64-mingw32.shared \
-    MXE_PLUGIN_DIRS=plugins/gcc11 \
     MXE_USE_CCACHE=no \
     && make clean-junk \
     && rm -rf pkg
-RUN ln -s /usr/bin/ld.lld /opt/mxe/usr/bin/i686-w64-mingw32.shared-ld.lld
