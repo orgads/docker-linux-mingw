@@ -12,9 +12,11 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     curl \
     flex \
     g++ \
+    gawk \
     gettext \
     git \
     gperf \
+    groff-base \
     intltool \
     less \
     libffi-dev \
@@ -33,22 +35,31 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     perl \
     pkg-config \
     python-is-python3 \
+    python3-mako \
+    python3-pip \
+    rsync \
     ruby \
     sed \
+    sudo \
+    texinfo \
     unzip \
     vim \
     wget \
     xz-utils \
-    && apt-get clean
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists
 
 ENV PATH=$PATH:/opt/mxe/usr/bin
 
 RUN git clone https://github.com/orgads/mxe /opt/mxe
 RUN cd /opt/mxe && \
     make -j$(nproc) JOBS=$(nproc) \
+    bfd \
     boost \
+    cmake \
     gcc \
     libgnurx \
+    libiberty \
     lld \
     mingw-w64 \
     zlib \
