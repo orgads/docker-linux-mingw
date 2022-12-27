@@ -53,6 +53,7 @@ RUN cd /opt/mxe && \
     mingw-w64 \
     zlib \
     MXE_TARGETS=i686-w64-mingw32.static \
+    MXE_PLUGIN_DIRS=plugins/gcc12 \
     MXE_USE_CCACHE=no \
     && make clean-junk \
     && rm -rf pkg
