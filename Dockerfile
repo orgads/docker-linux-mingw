@@ -1,6 +1,8 @@
-FROM debian:testing
+FROM debian:testing-slim
 RUN printf 'APT::Get::Install-Recommends "false";\nAPT::Get::Install-Suggests "false";' > /etc/apt/apt.conf.d/10no-recommends
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+RUN --mount=type=cache,target=/var/cache/apt \
+    --mount=type=cache,target=/var/lib/apt/lists \
+    apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     autoconf \
     automake \
     autopoint \
@@ -46,12 +48,15 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     vim \
     wget \
     xz-utils \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists
+    && rm -rf \
+      /usr/share/doc \
+      /usr/share/info \
+      /usr/share/locale \
+      /usr/share/man
 
 ENV PATH=$PATH:/opt/mxe/usr/bin
 
-RUN git clone https://github.com/orgads/mxe /opt/mxe
+RUN git clone https://github.com/mxe/mxe /opt/mxe
 RUN cd /opt/mxe && \
     make -j$(nproc) JOBS=$(nproc) \
     bfd \
@@ -60,11 +65,18 @@ RUN cd /opt/mxe && \
     gcc \
     libgnurx \
     libiberty \
+    libxml2 \
+    libxslt \
     lld \
     mingw-w64 \
     zlib \
     MXE_TARGETS=i686-w64-mingw32.static \
-    MXE_PLUGIN_DIRS=plugins/gcc12 \
+    MXE_PLUGIN_DIRS=plugins/gcc14 \
     MXE_USE_CCACHE=no \
     && make clean-junk \
-    && rm -rf pkg
+    && rm -rf \
+      pkg \
+      /opt/mxe/usr/i686-w64-mingw32.static/share/*doc \
+      /opt/mxe/usr/x86_64-pc-linux-gnu/doc \
+      /opt/mxe/usr/x86_64-pc-linux-gnu/share/cmake-3.29/Help \
+      /opt/mxe/usr/x86_64-pc-linux-gnu/share/locale
